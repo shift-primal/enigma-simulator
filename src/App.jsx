@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Encrypt from "./components/Encrypt";
 
 function App() {
