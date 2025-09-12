@@ -1,7 +1,7 @@
 import { alphabet } from "./baseData";
 
 export function shiftRotor(machineSettings) {
-	console.log("SHIFTING ROTOR!");
+	//console.log("SHIFTING ROTOR!");
 	return {
 		...machineSettings,
 		rotors: {
@@ -16,15 +16,15 @@ export function shiftRotor(machineSettings) {
 
 export function encryptRotors(char, direction, machineSettings) {
 	if (direction === "forward") {
-		console.log("Starting FORWARDS rotor encryption...");
-		console.log("Settings: ", machineSettings);
+		//console.log("Starting FORWARDS rotor encryption...");
+		//console.log("Settings: ", machineSettings);
 
 		let currIndex = alphabet.indexOf(char);
 		let currLetter = alphabet[currIndex];
-		console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
+		//console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
 
 		const rotorsArr = Object.entries(machineSettings.rotors).sort((a, b) => a[1].id - b[1].id);
-		console.log("Rotors:", rotorsArr);
+		//console.log("Rotors:", rotorsArr);
 
 		rotorsArr.forEach((rotor) => {
 			const rotorWiring = rotor[1].selectedRotor.wiring;
@@ -36,20 +36,20 @@ export function encryptRotors(char, direction, machineSettings) {
 			currIndex = (alphabet.indexOf(currLetter) - rotorPos + 26) % 26;
 			currLetter = alphabet[currIndex];
 
-			console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			//console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
 		});
 
 		return currIndex;
 	} else if (direction === "backwards") {
-		console.log("Starting BACKWARDS rotor encryption...");
-		console.log("Settings: ", machineSettings);
+		//console.log("Starting BACKWARDS rotor encryption...");
+		//console.log("Settings: ", machineSettings);
 
 		let currIndex = alphabet.indexOf(char);
 		let currLetter = alphabet[currIndex];
-		console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
+		//console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
 
 		const rotorsArr = Object.entries(machineSettings.rotors);
-		console.log("Rotors:", rotorsArr);
+		//console.log("Rotors:", rotorsArr);
 
 		rotorsArr.forEach((rotor) => {
 			const rotorWiring = rotor[1].selectedRotor.wiring;
@@ -60,7 +60,7 @@ export function encryptRotors(char, direction, machineSettings) {
 			currIndex = (wirePosition - rotorPos + 26) % 26;
 			currLetter = alphabet[currIndex];
 
-			console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			//console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
 		});
 
 		return currLetter;
