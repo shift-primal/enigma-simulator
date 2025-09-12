@@ -1,3 +1,5 @@
+// Old encrypt component
+
 import { Copy } from "lucide-react";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -145,3 +147,43 @@ const Encrypt = () => {
 };
 
 export default Encrypt;
+
+// Old encryption functions (enigma)
+
+function encryptRotors(char) {
+	const startIndex = alphabet.indexOf(char);
+	const startLetter = alphabet[startIndex];
+	console.log(`Starting letter: ${startLetter} - Index: ${startIndex}`);
+
+	let currLetter = machineSettings.rotors.right.selectedRotor.wiring[startIndex];
+	let currIndex = alphabet.indexOf(currLetter);
+	console.log(`Going through rotor: 1 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	currLetter = machineSettings.rotors.mid.selectedRotor.wiring[currIndex];
+	currIndex = alphabet.indexOf(currLetter);
+	console.log(`Going through rotor: 2 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	currLetter = machineSettings.rotors.left.selectedRotor.wiring[currIndex];
+	currIndex = alphabet.indexOf(currLetter);
+	console.log(`Going through rotor: 3 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	return currIndex;
+}
+
+// revers
+
+function encryptRotorsReverse(char) {
+	let currIndex = machineSettings.rotors.left.selectedRotor.wiring.indexOf(char);
+	let currLetter = alphabet[currIndex];
+	// console.log(`Going through rotor: 3 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	currIndex = machineSettings.rotors.mid.selectedRotor.wiring.indexOf(currLetter);
+	currLetter = alphabet[currIndex];
+	// console.log(`Going through rotor: 2 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	currIndex = machineSettings.rotors.right.selectedRotor.wiring.indexOf(currLetter);
+	currLetter = alphabet[currIndex];
+	// console.log(`Going through rotor: 1 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+
+	return currLetter;
+}

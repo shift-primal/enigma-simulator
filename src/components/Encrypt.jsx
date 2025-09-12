@@ -8,27 +8,6 @@ const Encrypt = () => {
 	const [inputText, setInputText] = useState("");
 	const [outputText, setOutputText] = useState("");
 
-	// Rotor høyre - pin 1 -> pin 4 rotor midt (A -> D)
-
-	// Rotor signal (Input -> Plugboard -> Rotor Right -> Rotor Mid -> Rotor Left -> Reflector -> Rotor Left -> Rotor Mid -> Rotor Right -> Plugboard -> Output)
-
-	/* 
-    
-    Keyboard Input: A
-    Rotors Position: AAA
-    Plugboard Encryption: A
-    Wheel 3 Encryption: B
-    Wheel 2 Encryption: J
-    Wheel 1 Encryption: Z
-    Reflector Encryption: T
-    Wheel 1 Encryption: L
-    Wheel 2 Encryption: K
-    Wheel 3 Encryption: U
-    Plugboard Encryption: U
-    Output (Lampboard): U
-
-    */
-
 	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 	const rotorsInfo = {
@@ -101,65 +80,70 @@ const Encrypt = () => {
 		setOutputText(encryptMsg(msg));
 	}
 
-	function shiftRotor() {}
-
-	// function encryptRotors(char) {
-	// 	const startIndex = alphabet.indexOf(char);
-	// 	const startLetter = alphabet[startIndex];
-	// 	console.log(`Starting letter: ${startLetter} - Index: ${startIndex}`);
-
-	// 	let currLetter = machineSettings.rotors.right.selectedRotor.wiring[startIndex];
-	// 	let currIndex = alphabet.indexOf(currLetter);
-	// 	console.log(`Going through rotor: 1 - New Letter: ${currLetter} - New Index: ${currIndex}`);
-
-	// 	currLetter = machineSettings.rotors.mid.selectedRotor.wiring[currIndex];
-	// 	currIndex = alphabet.indexOf(currLetter);
-	// 	console.log(`Going through rotor: 2 - New Letter: ${currLetter} - New Index: ${currIndex}`);
-
-	// 	currLetter = machineSettings.rotors.left.selectedRotor.wiring[currIndex];
-	// 	currIndex = alphabet.indexOf(currLetter);
-	// 	console.log(`Going through rotor: 3 - New Letter: ${currLetter} - New Index: ${currIndex}`);
-
-	// 	return currIndex;
-	// }
-
-	function encryptRotors(char) {
-		let currIndex = alphabet.indexOf(char);
-		let currLetter = alphabet[currIndex];
-		console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
-
-		const rotorsArr = Object.entries(machineSettings.rotors).sort((a, b) => a[1].id - b[1].id);
-
-		rotorsArr.forEach((rotor) => {
-			const rotorPos = rotor[1].position;
-			const rotorWiring = rotor[1].selectedRotor.wiring;
-			currLetter = rotorWiring[currIndex + rotorPos];
-			currIndex = alphabet.indexOf(currLetter);
-			console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
-		});
-
-		return currIndex;
+	function shiftRotor() {
+		const rotors = machineSettings.rotors;
+		rotors.right.position = (rotors.right.position + 1) % 26;
 	}
 
-	function encryptRotorsReverse(char) {
-		let currIndex = machineSettings.rotors.left.selectedRotor.wiring.indexOf(char);
-		let currLetter = alphabet[currIndex];
-		// console.log(`Going through rotor: 3 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+	function encryptRotors(char, direction) {
+		if (direction === "forward") {
+			shiftRotor();
+			console.log("Starting rotor encryption...");
+			console.log("Direction: Forwards");
+			console.log("Settings: ", machineSettings);
 
-		currIndex = machineSettings.rotors.mid.selectedRotor.wiring.indexOf(currLetter);
-		currLetter = alphabet[currIndex];
-		// console.log(`Going through rotor: 2 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			let currIndex = alphabet.indexOf(char);
+			let currLetter = alphabet[currIndex];
+			console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
 
-		currIndex = machineSettings.rotors.right.selectedRotor.wiring.indexOf(currLetter);
-		currLetter = alphabet[currIndex];
-		// console.log(`Going through rotor: 1 - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			const rotorsArr = Object.entries(machineSettings.rotors).sort((a, b) => a[1].id - b[1].id);
+			console.log("Rotors:", rotorsArr);
 
-		return currLetter;
+			rotorsArr.forEach((rotor) => {
+				const rotorWiring = rotor[1].selectedRotor.wiring;
+				const rotorPos = rotor[1].position;
+				const offsetIndex = (currIndex + rotorPos) % 26;
+
+				currLetter = rotorWiring[offsetIndex];
+
+				currIndex = (alphabet.indexOf(currLetter) - rotorPos + 26) % 26;
+				currLetter = alphabet[currIndex];
+
+				console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			});
+
+			return currIndex;
+		} else if (direction === "backwards") {
+			console.log("Starting rotor encryption...");
+			console.log("Direction: Backwards");
+			console.log("Settings: ", machineSettings);
+
+			let currIndex = alphabet.indexOf(char);
+			let currLetter = alphabet[currIndex];
+			console.log(`Starting letter: ${currLetter} - Index: ${currIndex}`);
+
+			const rotorsArr = Object.entries(machineSettings.rotors);
+			console.log("Rotors:", rotorsArr);
+
+			rotorsArr.forEach((rotor) => {
+				const rotorWiring = rotor[1].selectedRotor.wiring;
+				const rotorPos = rotor[1].position;
+				const offsetIndex = (currIndex + rotorPos) % 26;
+				const wirePosition = rotorWiring.indexOf(alphabet[offsetIndex]);
+
+				currIndex = (wirePosition - rotorPos + 26) % 26;
+				currLetter = alphabet[currIndex];
+
+				console.log(`Going through rotor: ${rotor[0]} - New Letter: ${currLetter} - New Index: ${currIndex}`);
+			});
+
+			return currLetter;
+		}
+		return null;
 	}
 
 	function encryptReflector(index) {
-		console.log(index);
-		console.log(machineSettings.selectedReflector);
+		// console.log(machineSettings.selectedReflector);
 		return machineSettings.selectedReflector[index];
 	}
 
@@ -167,7 +151,7 @@ const Encrypt = () => {
 		let encryptedMsg = "";
 
 		msg.split("").forEach((char) => {
-			encryptedMsg += encryptRotorsReverse(encryptReflector(encryptRotors(char)));
+			encryptedMsg += encryptRotors(encryptReflector(encryptRotors(char, "forward")), "backwards");
 		});
 		return encryptedMsg;
 	}
