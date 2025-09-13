@@ -72,16 +72,8 @@ export function encryptReflector(index, machineSettings) {
 	return machineSettings.selectedReflector[index];
 }
 
-export function encryptMsg(msg, machineSettings) {
+export function encryptMsg(msg, currentSettings) {
 	let encryptedMsg = "";
-	let currentSettings = {
-		...machineSettings,
-		rotors: {
-			left: { ...machineSettings.rotors.left },
-			mid: { ...machineSettings.rotors.mid },
-			right: { ...machineSettings.rotors.right },
-		},
-	};
 
 	msg.split("").forEach((char, i) => {
 		if (i % 5 === 0) {

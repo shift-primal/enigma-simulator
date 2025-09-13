@@ -1,6 +1,6 @@
 import { alphabet } from "./baseData";
 
-export function sanitizeInput(msg) {
+export function cleanInput(msg) {
 	return msg.split("").some((char) => {
 		return !alphabet.includes(char);
 	});

@@ -1,9 +1,9 @@
-import Encrypt from "./components/Encrypt";
+import Container from "./components/Container";
 
 function App() {
 	return (
 		<main className="bg-gray-950 min-h-screen flex justify-center items-center">
-			<Encrypt />
+			<Container />
 		</main>
 	);
 }
