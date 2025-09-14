@@ -12,7 +12,6 @@ const Container = () => {
 	const [outputText, setOutputText] = useState("");
 	const [baseSettings, setBaseSettings] = useState(defaultSettings);
 	const [currentRotorPositions, setCurrentRotorPositions] = useState({
-		// Just the positions after encryption
 		left: 0,
 		mid: 0,
 		right: 0,
@@ -23,14 +22,13 @@ const Container = () => {
 			handleOutput(inputText);
 		} else {
 			setOutputText("");
-			// Reset rotor positions when input is cleared
 			setCurrentRotorPositions({
 				left: baseSettings.rotors.left.position,
 				mid: baseSettings.rotors.mid.position,
 				right: baseSettings.rotors.right.position,
 			});
 		}
-	}, [inputText, baseSettings]); // Only depend on inputText and baseSettings
+	}, [inputText, baseSettings]);
 
 	function handleOutput(inputText) {
 		if (cleanInput(inputText)) {
@@ -41,9 +39,15 @@ const Container = () => {
 		const currentSettings = {
 			...baseSettings,
 			rotors: {
-				left: { ...baseSettings.rotors.left },
-				mid: { ...baseSettings.rotors.mid },
-				right: { ...baseSettings.rotors.right },
+				left: {
+					...baseSettings.rotors.left,
+				},
+				mid: {
+					...baseSettings.rotors.mid,
+				},
+				right: {
+					...baseSettings.rotors.right,
+				},
 			},
 		};
 
@@ -60,8 +64,8 @@ const Container = () => {
 	return (
 		<div className="bg-gray-50 p-24 border-4 border-gray-400 rounded-4xl">
 			<Settings
-				machineSettings={baseSettings}
-				setMachineSettings={setBaseSettings}
+				baseSettings={baseSettings}
+				setBaseSettings={setBaseSettings}
 				currentRotorPositions={currentRotorPositions}
 			/>
 			<div
