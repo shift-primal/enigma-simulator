@@ -1,14 +1,15 @@
 import { alphabet } from "./baseData";
 
-export function shiftRotor(machineSettings) {
+export function shiftRotor(machineSettings, rotorToShift) {
+	console.log(rotorToShift);
 	//console.log("SHIFTING ROTOR!");
 	return {
 		...machineSettings,
 		rotors: {
 			...machineSettings.rotors,
-			right: {
-				...machineSettings.rotors.right,
-				position: (machineSettings.rotors.right.position + 1) % 26,
+			[rotorToShift]: {
+				...machineSettings.rotors[rotorToShift],
+				position: (machineSettings.rotors[rotorToShift].position + 1) % 26,
 			},
 		},
 	};
@@ -79,7 +80,7 @@ export function encryptMsg(msg, currentSettings) {
 		if (i % 5 === 0) {
 			encryptedMsg += " ";
 		}
-		currentSettings = shiftRotor(currentSettings);
+		currentSettings = shiftRotor(currentSettings, "right");
 		encryptedMsg += encryptRotors(
 			encryptReflector(encryptRotors(char, "forward", currentSettings), currentSettings),
 			"backwards",

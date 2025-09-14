@@ -1,6 +1,4 @@
 const Input = ({ inputText, setInputText }) => {
-
-	
 	return (
 		<div
 			id="container-userInput"
@@ -23,7 +21,10 @@ const Input = ({ inputText, setInputText }) => {
 					spellCheck="false"
 					onChange={(e) => {
 						e.preventDefault();
-						setInputText(e.target.value.toUpperCase());
+						const newValue = e.target.value.toUpperCase();
+						if (newValue !== inputText) {
+							setInputText(newValue);
+						}
 					}}
 				/>
 			</form>

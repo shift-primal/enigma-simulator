@@ -1,4 +1,4 @@
-const Settings = ({ machineSettings, setMachineSettings }) => {
+const Settings = ({ machineSettings, setMachineSettings, currentRotorPositions }) => {
 	return (
 		<div
 			id="settings-container"
@@ -9,11 +9,11 @@ const Settings = ({ machineSettings, setMachineSettings }) => {
 					return (
 						<div
 							key={rotor[0]}
-							className="flex gap-1 border-2 px-2 py-1"
+							className="flex flex-col gap-1 border-2 px-2 py-1"
 						>
 							<label
 								htmlFor={`offset-rotor-${rotor[0]}`}
-								className="capitalize"
+								className="capitalize text-center"
 							>
 								{rotor[0]}
 							</label>
@@ -46,6 +46,8 @@ const Settings = ({ machineSettings, setMachineSettings }) => {
 									);
 								})}
 							</select>
+
+							<div className="text-sm text-center text-gray-600">Current: {currentRotorPositions[rotor[0]]}</div>
 						</div>
 					);
 				})}

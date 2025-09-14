@@ -10,11 +10,27 @@ import { encryptMsg } from "../utils/enigmaMachine";
 const Container = () => {
 	const [inputText, setInputText] = useState("");
 	const [outputText, setOutputText] = useState("");
-	const [machineSettings, setMachineSettings] = useState(defaultSettings);
+	const [baseSettings, setBaseSettings] = useState(defaultSettings);
+	const [currentRotorPositions, setCurrentRotorPositions] = useState({
+		// Just the positions after encryption
+		left: 0,
+		mid: 0,
+		right: 0,
+	});
 
 	useEffect(() => {
-		inputText ? handleOutput(inputText) : null;
-	}, [inputText]);
+		if (inputText) {
+			handleOutput(inputText);
+		} else {
+			setOutputText("");
+			// Reset rotor positions when input is cleared
+			setCurrentRotorPositions({
+				left: baseSettings.rotors.left.position,
+				mid: baseSettings.rotors.mid.position,
+				right: baseSettings.rotors.right.position,
+			});
+		}
+	}, [inputText, baseSettings]); // Only depend on inputText and baseSettings
 
 	function handleOutput(inputText) {
 		if (cleanInput(inputText)) {
@@ -23,24 +39,30 @@ const Container = () => {
 		}
 
 		const currentSettings = {
-			...machineSettings,
+			...baseSettings,
 			rotors: {
-				left: { ...machineSettings.rotors.left },
-				mid: { ...machineSettings.rotors.mid },
-				right: { ...machineSettings.rotors.right },
+				left: { ...baseSettings.rotors.left },
+				mid: { ...baseSettings.rotors.mid },
+				right: { ...baseSettings.rotors.right },
 			},
 		};
 
 		const result = encryptMsg(inputText, currentSettings);
 		setOutputText(result.encryptedMsg);
-		setMachineSettings(result.finalSettings);
+
+		setCurrentRotorPositions({
+			left: result.finalSettings.rotors.left.position,
+			mid: result.finalSettings.rotors.mid.position,
+			right: result.finalSettings.rotors.right.position,
+		});
 	}
 
 	return (
 		<div className="bg-gray-50 p-24 border-4 border-gray-400 rounded-4xl">
 			<Settings
-				machineSettings={machineSettings}
-				setMachineSettings={setMachineSettings}
+				machineSettings={baseSettings}
+				setMachineSettings={setBaseSettings}
+				currentRotorPositions={currentRotorPositions}
 			/>
 			<div
 				id="encrypt-container"
@@ -55,7 +77,6 @@ const Container = () => {
 					inputText={inputText}
 					outputText={outputText}
 					setOutputText={setOutputText}
-					setMachineSettings={setMachineSettings}
 				/>
 			</div>
 			<ToastContainer />
