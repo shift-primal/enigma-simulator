@@ -33,18 +33,18 @@ const Encrypt = () => {
 			return;
 		}
 
-		const resetSettings = {
-			...defaultSettings,
+		const currentSettings = {
+			...machineSettings,
 			rotors: {
-				left: { ...defaultSettings.rotors.left },
-				mid: { ...defaultSettings.rotors.mid },
-				right: { ...defaultSettings.rotors.right },
+				left: { ...machineSettings.rotors.left },
+				mid: { ...machineSettings.rotors.mid },
+				right: { ...machineSettings.rotors.right },
 			},
 		};
 
-		const result = encryptMsg(msg, resetSettings);
+		const result = encryptMsg(msg, currentSettings);
 		setOutputText(result.encryptedMsg);
-		setMachineSettings(result.finalSettings);
+		// setMachineSettings(result.finalSettings);
 	}
 
 	return (

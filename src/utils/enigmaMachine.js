@@ -1,17 +1,77 @@
 import { alphabet } from "./baseData";
 
-export function shiftRotor(machineSettings) {
-	//console.log("SHIFTING ROTOR!");
-	return {
-		...machineSettings,
-		rotors: {
-			...machineSettings.rotors,
-			right: {
-				...machineSettings.rotors.right,
-				position: (machineSettings.rotors.right.position + 1) % 26,
+function checkRotorShift(machineSettings) {
+	Object.entries(machineSettings.rotors).forEach((rotor) => {
+		const currentRotor = rotor[0];
+		const turnOverValue = alphabet.indexOf(rotor[1].selectedRotor.notch);
+		const currentPos = rotor[1].position;
+
+		console.log(`currentRotor: ${currentRotor}`);
+		console.log(`currentPos: ${currentPos}`);
+		console.log(`turnOverValue: ${turnOverValue}`);
+
+		if (currentPos === turnOverValue) {
+			console.log(currentRotor, "here yes");
+			return currentRotor;
+		}
+	});
+}
+
+function shiftRotors(machineSettings) {
+	let newSettings = { ...machineSettings };
+	if (checkRotorShift(newSettings) !== "right") {
+		console.log("!!!TURNING OVER RIGHT!!!");
+
+		newSettings = {
+			...machineSettings,
+			rotors: {
+				...machineSettings.rotors,
+				right: {
+					...machineSettings.rotors.right,
+					position: (machineSettings.rotors.right.position + 1) % 26,
+				},
 			},
-		},
-	};
+		};
+	} else if (checkRotorShift(newSettings) === "right") {
+		console.log("!!!TURNING OVER MID!!!");
+
+		newSettings = {
+			...machineSettings,
+			rotors: {
+				...machineSettings.rotors,
+				mid: {
+					...machineSettings.rotors.mid,
+					position: (machineSettings.rotors.mid.position + 1) % 26,
+				},
+				right: {
+					...machineSettings.rotors.right,
+					position: (machineSettings.rotors.right.position + 1) % 26,
+				},
+			},
+		};
+	} else if (checkRotorShift(newSettings) === "mid") {
+		console.log("!!!TURNING OVER LEFT!!!");
+
+		newSettings = {
+			...machineSettings,
+			rotors: {
+				...machineSettings.rotors,
+				left: {
+					...machineSettings.rotors.left,
+					position: (machineSettings.rotors.left.position + 1) % 26,
+				},
+				mid: {
+					...machineSettings.rotors.mid,
+					position: (machineSettings.rotors.mid.position + 1) % 26,
+				},
+				right: {
+					...machineSettings.rotors.right,
+					position: (machineSettings.rotors.right.position + 1) % 26,
+				},
+			},
+		};
+	}
+	return newSettings;
 }
 
 export function encryptRotors(char, direction, machineSettings) {
@@ -87,7 +147,7 @@ export function encryptMsg(msg, machineSettings) {
 		if (i % 5 === 0) {
 			encryptedMsg += " ";
 		}
-		currentSettings = shiftRotor(currentSettings);
+		currentSettings = shiftRotors(currentSettings, char);
 		encryptedMsg += encryptRotors(
 			encryptReflector(encryptRotors(char, "forward", currentSettings), currentSettings),
 			"backwards",
