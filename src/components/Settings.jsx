@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { alphabet } from "../utils/baseData";
 
 const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
@@ -11,12 +12,9 @@ const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 				<form className="flex justify-center gap-8 text-xl w-fit">
 					{Object.entries(baseSettings.rotors).map((rotor, i) => {
 						return (
-							<>
+							<Fragment key={`ring-${rotor[0]}`}>
 								{i === 0 ? null : <div className="border-l-2 opacity-25"></div>}
-								<div
-									key={rotor[0]}
-									className="flex flex-col gap-1 px-2 py-1"
-								>
+								<div className="flex flex-col gap-1 px-2 py-1">
 									<label
 										htmlFor={`offset-rotor-${rotor[0]}`}
 										className="capitalize text-center"
@@ -53,7 +51,7 @@ const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 										})}
 									</select>
 								</div>
-							</>
+							</Fragment>
 						);
 					})}
 				</form>
@@ -64,12 +62,9 @@ const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 				<form className="flex justify-center gap-8 text-xl w-fit">
 					{Object.entries(baseSettings.rotors).map((rotor, i) => {
 						return (
-							<>
+							<Fragment key={`offset-${rotor[0]}`}>
 								{i === 0 ? null : <div className="border-l-2 opacity-25"></div>}
-								<div
-									key={rotor[0]}
-									className={`flex flex-col gap-1 px-2 py-1`}
-								>
+								<div className={`flex flex-col gap-1 px-2 py-1`}>
 									<label
 										htmlFor={`offset-rotor-${rotor[0]}`}
 										className="capitalize text-center"
@@ -110,7 +105,7 @@ const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 										Current: {alphabet[currentRotorPositions[rotor[0]]]}
 									</div>
 								</div>
-							</>
+							</Fragment>
 						);
 					})}
 				</form>
