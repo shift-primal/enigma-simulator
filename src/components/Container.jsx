@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { defaultSettings } from "../utils/baseData";
 import { cleanInput } from "../utils/cleanInput";
 import { encryptMsg } from "../utils/enigmaMachine";
+import Plugboard from "./Plugboard";
 
 const Container = () => {
 	const [inputText, setInputText] = useState("");
@@ -62,28 +63,41 @@ const Container = () => {
 	}
 
 	return (
-		<div className="bg-gray-50 p-24 border-4 border-gray-400 rounded-4xl">
-			<Settings
-				baseSettings={baseSettings}
-				setBaseSettings={setBaseSettings}
-				currentRotorPositions={currentRotorPositions}
-			/>
+		<div className="grid grid-rows-2 gap-8">
 			<div
-				id="encrypt-container"
-				className="flex flex-col gap-4 items-center justify-center text-2xl"
+				id="first-row"
+				className="row-span-1 flex gap-8"
 			>
-				<h1 className="text-3xl place-self-center mb-4">Encrypt message</h1>
-				<Input
-					inputText={inputText}
-					setInputText={setInputText}
-				/>
-				<Output
-					inputText={inputText}
-					outputText={outputText}
-					setOutputText={setOutputText}
-				/>
+				<div className="bg-gray-50 p-8 px-16 border-4 border-gray-400 rounded-4xl flex items-center justify-center row-span-1">
+					<div
+						id="encrypt-container"
+						className="flex flex-col gap-4 items-center justify-center text-2xl"
+					>
+						<h1 className="text-3xl place-self-center mb-4">Encrypt message</h1>
+						<Input
+							inputText={inputText}
+							setInputText={setInputText}
+						/>
+						<Output
+							inputText={inputText}
+							outputText={outputText}
+							setOutputText={setOutputText}
+						/>
+					</div>
+					<ToastContainer />
+				</div>
+
+				<div className="bg-gray-50 p-8 border-4 border-gray-400 rounded-4xl flex items-center justify-center">
+					<Settings
+						baseSettings={baseSettings}
+						setBaseSettings={setBaseSettings}
+						currentRotorPositions={currentRotorPositions}
+					/>
+				</div>
 			</div>
-			<ToastContainer />
+			<div className="bg-gray-50 p-8 border-4 border-gray-400 rounded-4xl flex items-center justify-center">
+				<Plugboard />
+			</div>
 		</div>
 	);
 };

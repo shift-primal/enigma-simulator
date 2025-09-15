@@ -1,105 +1,120 @@
+import { alphabet } from "../utils/baseData";
+
 const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 	return (
 		<div
 			id="settings-container"
-			className="flex flex-col items-center justify-center gap-y-4"
+			className="flex flex-col items-center justify-center gap-y-8"
 		>
-			<h2>Rotor offset</h2>
-			<form className="mb-8 flex justify-center gap-8 text-xl w-fit">
-				{Object.entries(baseSettings.rotors).map((rotor) => {
-					return (
-						<div
-							key={rotor[0]}
-							className="flex flex-col gap-1 border-2 px-2 py-1"
-						>
-							<label
-								htmlFor={`offset-rotor-${rotor[0]}`}
-								className="capitalize text-center"
-							>
-								{rotor[0]}
-							</label>
+			<div className="flex flex-col items-center gap-y-4 p-2">
+				<h2>Ring settings</h2>
+				<form className="flex justify-center gap-8 text-xl w-fit">
+					{Object.entries(baseSettings.rotors).map((rotor, i) => {
+						return (
+							<>
+								{i === 0 ? null : <div className="border-l-2 opacity-25"></div>}
+								<div
+									key={rotor[0]}
+									className="flex flex-col gap-1 px-2 py-1"
+								>
+									<label
+										htmlFor={`offset-rotor-${rotor[0]}`}
+										className="capitalize text-center"
+									>
+										{rotor[0]}
+									</label>
 
-							<select
-								id={`offset-rotor-${rotor[0]}`}
-								className="focus:outline-none"
-								value={baseSettings.rotors[rotor[0]].position}
-								onChange={(e) => {
-									setBaseSettings((prev) => ({
-										...prev,
-										rotors: {
-											...prev.rotors,
-											[rotor[0]]: {
-												...prev.rotors[rotor[0]],
-												position: parseInt(e.target.value),
-											},
-										},
-									}));
-								}}
-							>
-								{new Array(26).fill(0).map((num, i) => {
-									return (
-										<option
-											key={i}
-											value={i}
-										>
-											{i}
-										</option>
-									);
-								})}
-							</select>
+									<select
+										id={`offset-rotor-${rotor[0]}`}
+										className="focus:outline-none w-fit self-center"
+										value={baseSettings.rotors[rotor[0]].ringSetting}
+										onChange={(e) => {
+											setBaseSettings((prev) => ({
+												...prev,
+												rotors: {
+													...prev.rotors,
+													[rotor[0]]: {
+														...prev.rotors[rotor[0]],
+														ringSetting: parseInt(e.target.value),
+													},
+												},
+											}));
+										}}
+									>
+										{new Array(26).fill(0).map((num, i) => {
+											return (
+												<option
+													key={i}
+													value={i}
+												>
+													{alphabet[i]}
+												</option>
+											);
+										})}
+									</select>
+								</div>
+							</>
+						);
+					})}
+				</form>
+			</div>
+			<div className="border-t-2 opacity-25 self-stretch mt-4"></div>
+			<div className="flex flex-col items-center gap-y-4 p-2">
+				<h2>Rotor offset</h2>
+				<form className="flex justify-center gap-8 text-xl w-fit">
+					{Object.entries(baseSettings.rotors).map((rotor, i) => {
+						return (
+							<>
+								{i === 0 ? null : <div className="border-l-2 opacity-25"></div>}
+								<div
+									key={rotor[0]}
+									className={`flex flex-col gap-1 px-2 py-1`}
+								>
+									<label
+										htmlFor={`offset-rotor-${rotor[0]}`}
+										className="capitalize text-center"
+									>
+										{rotor[0]}
+									</label>
 
-							<div className="text-sm text-center text-gray-600">Current: {currentRotorPositions[rotor[0]]}</div>
-						</div>
-					);
-				})}
-			</form>
-			<h2>Ring settings</h2>
-			<form className="mb-8 flex justify-center gap-8 text-xl w-fit">
-				{Object.entries(baseSettings.rotors).map((rotor) => {
-					return (
-						<div
-							key={rotor[0]}
-							className="flex flex-col gap-1 border-2 px-2 py-1"
-						>
-							<label
-								htmlFor={`offset-rotor-${rotor[0]}`}
-								className="capitalize text-center"
-							>
-								{rotor[0]}
-							</label>
+									<select
+										id={`offset-rotor-${rotor[0]}`}
+										className="focus:outline-none w-fit self-center"
+										value={baseSettings.rotors[rotor[0]].position}
+										onChange={(e) => {
+											setBaseSettings((prev) => ({
+												...prev,
+												rotors: {
+													...prev.rotors,
+													[rotor[0]]: {
+														...prev.rotors[rotor[0]],
+														position: parseInt(e.target.value),
+													},
+												},
+											}));
+										}}
+									>
+										{new Array(26).fill(0).map((num, i) => {
+											return (
+												<option
+													key={i}
+													value={i}
+												>
+													{alphabet[i]}
+												</option>
+											);
+										})}
+									</select>
 
-							<select
-								id={`offset-rotor-${rotor[0]}`}
-								className="focus:outline-none"
-								value={baseSettings.rotors[rotor[0]].ringSetting}
-								onChange={(e) => {
-									setBaseSettings((prev) => ({
-										...prev,
-										rotors: {
-											...prev.rotors,
-											[rotor[0]]: {
-												...prev.rotors[rotor[0]],
-												ringSetting: parseInt(e.target.value),
-											},
-										},
-									}));
-								}}
-							>
-								{new Array(26).fill(0).map((num, i) => {
-									return (
-										<option
-											key={i}
-											value={i}
-										>
-											{i}
-										</option>
-									);
-								})}
-							</select>
-						</div>
-					);
-				})}
-			</form>
+									<div className="text-sm text-center text-gray-600 w-20">
+										Current: {alphabet[currentRotorPositions[rotor[0]]]}
+									</div>
+								</div>
+							</>
+						);
+					})}
+				</form>
+			</div>
 		</div>
 	);
 };
