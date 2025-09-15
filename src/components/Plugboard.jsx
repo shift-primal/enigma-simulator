@@ -19,6 +19,26 @@ const Plugboard = () => {
 
 	const letters = "QWERTZUIOASDFGHJKPYXCVBNML".split("");
 
+	console.log("State change", selectedPlug);
+
+	function letterClasses(letter) {
+		let classes = "text-lg text-center border-2 p-2 flex flex-col cursor-pointer outline-green-400 hover:outline-2";
+
+		if (linkedPlugs.length >= 1) {
+			linkedPlugs.forEach((plug) => {
+				if (plug.includes(letter)) {
+					classes += " bg-green-400";
+				}
+			});
+		}
+
+		if (selectedPlug.includes(letter)) {
+			classes += " bg-green-400";
+		}
+
+		return classes;
+	}
+
 	function checkForDuplicates(inputChar) {
 		let occupiedChars = [];
 		linkedPlugs.forEach((plug) => {
@@ -43,10 +63,12 @@ const Plugboard = () => {
 					<button
 						key={letter}
 						id={`plugboard-letter-${letter}`}
-						className="text-lg text-center border-2 p-2 flex flex-col cursor-pointer hover:border-green-500 hover:text-green-500"
+						className={letterClasses(letter)}
 						onClick={() => {
 							if (letter !== selectedPlug[0] && !checkForDuplicates(letter)) {
 								setSelectedPlug((prev) => [...prev, letter]);
+							} else {
+								setSelectedPlug([]);
 							}
 						}}
 					>
