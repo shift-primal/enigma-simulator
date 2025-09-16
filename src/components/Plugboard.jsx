@@ -1,39 +1,60 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const Plugboard = () => {
-	const [linkedPlugs, setLinkedPlugs] = useState([]);
+import "@xyflow/react/dist/style.css";
+import PlugButton from "./PlugButton";
+
+const Plugboard = ({ linkedPlugs, setLinkedPlugs }) => {
 	const [selectedPlug, setSelectedPlug] = useState([]);
 
-	useEffect(() => {
-		if (selectedPlug.length >= 2) {
-			setLinkedPlugs((prev) => [...prev, selectedPlug]);
+	const letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+
+	function handlePlugClick(letter) {
+		if (letter !== selectedPlug[0] && !checkForDuplicates(letter)) {
+			const newSelection = [...selectedPlug, letter];
+
+			if (newSelection.length >= 2 && linkedPlugs.length < 10) {
+				setLinkedPlugs((prev) => [...prev, newSelection]);
+				setSelectedPlug([]);
+			} else if (newSelection.length >= 2 && linkedPlugs.length >= 10) {
+				alert("Plugboard limit reached! Max 10 connections");
+				setSelectedPlug([]);
+			} else {
+				setSelectedPlug(newSelection);
+			}
+		} else {
 			setSelectedPlug([]);
 		}
-	}, [selectedPlug]);
+	}
 
-	useEffect(() => {
-		if (linkedPlugs.length > 0) {
-			console.log(linkedPlugs);
+	function selectedClasses(letter) {
+		if (selectedPlug.includes(letter)) {
+			return " outline-dashed";
 		}
-	}, [linkedPlugs]);
+	}
 
-	const letters = "QWERTZUIOASDFGHJKPYXCVBNML".split("");
+	function dotsClasses(letter) {
+		const colorClasses = [
+			"!bg-red-600",
+			"!bg-yellow-400",
+			"!bg-green-500",
+			"!bg-cyan-300",
+			"!bg-cyan-500",
+			"!bg-blue-600",
+			"!bg-purple-400",
+			"!bg-pink-400",
+			"!bg-amber-800",
+			"!bg-gray-600",
+		];
 
-	console.log("State change", selectedPlug);
-
-	function letterClasses(letter) {
-		let classes = "text-lg text-center border-2 p-2 flex flex-col cursor-pointer outline-green-400 hover:outline-2";
+		let classes = "border-1 w-3 aspect-square rounded-full";
 
 		if (linkedPlugs.length >= 1) {
-			linkedPlugs.forEach((plug) => {
+			linkedPlugs.forEach((plug, index) => {
 				if (plug.includes(letter)) {
-					classes += " bg-green-400";
+					const colorClass = colorClasses[index];
+					classes += ` ${colorClass}`;
 				}
 			});
-		}
-
-		if (selectedPlug.includes(letter)) {
-			classes += " bg-green-400";
 		}
 
 		return classes;
@@ -54,31 +75,46 @@ const Plugboard = () => {
 	}
 
 	return (
-		<div
-			id="plugboard-container"
-			className="grid grid-cols-9 gap-y-4 gap-x-20 place-items-center"
-		>
-			{letters.map((letter) => {
-				return (
-					<button
+		<div className="flex flex-col items-center justify-center gap-y-4">
+			<h1 className="text-2xl">Plugboard</h1>
+
+			<div className="flex gap-x-10 justify-center">
+				{letters.slice(0, 10).map((letter) => (
+					<PlugButton
 						key={letter}
-						id={`plugboard-letter-${letter}`}
-						className={letterClasses(letter)}
-						onClick={() => {
-							if (letter !== selectedPlug[0] && !checkForDuplicates(letter)) {
-								setSelectedPlug((prev) => [...prev, letter]);
-							} else {
-								setSelectedPlug([]);
-							}
-						}}
-					>
-						<span>{letter}</span>
-						<div className="border-t-1 my-1"></div>
-						<span>○</span>
-						<span>○</span>
-					</button>
-				);
-			})}
+						letter={letter}
+						selectedClasses={selectedClasses}
+						dotsClasses={dotsClasses}
+						handlePlugClick={handlePlugClick}
+					/>
+				))}
+			</div>
+
+			<div className="flex gap-x-10 justify-center">
+				{letters.slice(10, 19).map((letter) => (
+					<PlugButton
+						key={letter}
+						letter={letter}
+						selectedClasses={selectedClasses}
+						dotsClasses={dotsClasses}
+						handlePlugClick={handlePlugClick}
+					/>
+				))}
+			</div>
+
+			<div className="flex gap-x-10 justify-center">
+				{letters.slice(19, 26).map((letter) => (
+					<PlugButton
+						key={letter}
+						letter={letter}
+						selectedClasses={selectedClasses}
+						dotsClasses={dotsClasses}
+						handlePlugClick={handlePlugClick}
+					/>
+				))}
+			</div>
+
+			<h2 className="text-xl mt-2">Plugboard connections: {linkedPlugs.length}/10</h2>
 		</div>
 	);
 };

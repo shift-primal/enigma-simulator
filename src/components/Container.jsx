@@ -11,6 +11,7 @@ import Plugboard from "./Plugboard";
 const Container = () => {
 	const [inputText, setInputText] = useState("");
 	const [outputText, setOutputText] = useState("");
+	const [linkedPlugs, setLinkedPlugs] = useState([]);
 	const [baseSettings, setBaseSettings] = useState(defaultSettings);
 	const [currentRotorPositions, setCurrentRotorPositions] = useState({
 		left: 0,
@@ -52,7 +53,7 @@ const Container = () => {
 			},
 		};
 
-		const result = encryptMsg(inputText, currentSettings);
+		const result = encryptMsg(inputText, currentSettings, linkedPlugs);
 		setOutputText(result.encryptedMsg);
 
 		setCurrentRotorPositions({
@@ -63,15 +64,15 @@ const Container = () => {
 	}
 
 	return (
-		<div className="grid grid-rows-2 gap-8">
+		<div className="grid gap-8">
 			<div
 				id="first-row"
 				className="row-span-1 flex gap-8"
 			>
-				<div className="bg-gray-50 p-8 px-16 border-4 border-gray-400 rounded-4xl flex items-center justify-center row-span-1">
+				<div className="bg-gray-50 border-4 border-gray-400 rounded-4xl flex items-center justify-center px-16 py-8 h-full w-full">
 					<div
 						id="encrypt-container"
-						className="flex flex-col gap-4 items-center justify-center text-2xl"
+						className="flex flex-col gap-4 text-2xl"
 					>
 						<h1 className="text-3xl place-self-center mb-4">Encrypt message</h1>
 						<Input
@@ -87,7 +88,7 @@ const Container = () => {
 					<ToastContainer />
 				</div>
 
-				<div className="bg-gray-50 p-8 border-4 border-gray-400 rounded-4xl flex items-center justify-center">
+				<div className="bg-gray-50 border-4 border-gray-400 rounded-4xl flex items-center justify-center p-8 h-full w-full">
 					<Settings
 						baseSettings={baseSettings}
 						setBaseSettings={setBaseSettings}
@@ -95,8 +96,16 @@ const Container = () => {
 					/>
 				</div>
 			</div>
-			<div className="bg-gray-50 p-8 border-4 border-gray-400 rounded-4xl flex items-center justify-center">
-				<Plugboard />
+			<div
+				id="second-row"
+				className="row-span-1 flex gap-8"
+			>
+				<div className="bg-gray-50 border-4 border-gray-400 rounded-4xl flex items-center justify-center p-8 h-full w-full">
+					<Plugboard
+						linkedPlugs={linkedPlugs}
+						setLinkedPlugs={setLinkedPlugs}
+					/>
+				</div>
 			</div>
 		</div>
 	);

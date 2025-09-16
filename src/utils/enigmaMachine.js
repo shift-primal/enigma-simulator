@@ -104,8 +104,32 @@ function encryptReflector(index, machineSettings) {
 	return machineSettings.selectedReflector[index];
 }
 
-export function encryptMsg(msg, currentSettings) {
-	// console.log("Starting encryption...")
+function encryptPlugboard(char, linkedPlugs) {
+	for (const plug of linkedPlugs) {
+		if (plug.includes(char)) {
+			return plug.find((letter) => letter !== char);
+		}
+	}
+
+	return char;
+}
+
+function debugLog(debugContext) {
+	console.log(`
+==========================
+Keyboard Input: ${debugContext.char}
+Settings: ${debugContext.debugSettings}
+Plugboard Encryption: ${debugContext.firstPlugboardResult}
+First Rotor Encryption: ${debugContext.forwardResult}
+Reflector Encryption: ${debugContext.reflectorResult}
+Second Rotor Encryption: ${debugContext.backwardResult}
+Second Plugboard Encryption // Final output: ${debugContext.finalPlugboardResult}
+==========================
+			`);
+}
+
+export function encryptMsg(msg, currentSettings, linkedPlugs) {
+	console.log("Starting encryption...");
 	let encryptedMsg = "";
 
 	msg.split("").forEach((char, i) => {
@@ -116,11 +140,28 @@ export function encryptMsg(msg, currentSettings) {
 		const rotorsToShift = checkRotorsToShift(currentSettings);
 		currentSettings = shiftRotor(currentSettings, rotorsToShift);
 
-		const forwardResult = encryptRotors(char, "forward", currentSettings);
+		const firstPlugboardResult = encryptPlugboard(char, linkedPlugs);
+		const forwardResult = encryptRotors(firstPlugboardResult, "forward", currentSettings);
 		const reflectorResult = encryptReflector(forwardResult, currentSettings);
 		const backwardResult = encryptRotors(reflectorResult, "backwards", currentSettings);
+		const finalPlugboardResult = encryptPlugboard(backwardResult, linkedPlugs);
 
-		encryptedMsg += backwardResult;
+		const debugSettings = Object.entries(currentSettings.rotors).map((rotor) => alphabet[rotor[1].position]);
+		const debugContext = {
+			char,
+			debugSettings,
+			firstPlugboardResult,
+			forwardResult,
+			reflectorResult,
+			backwardResult,
+			finalPlugboardResult,
+		};
+
+		if (i === msg.length - 1) {
+			debugLog(debugContext);
+		}
+
+		encryptedMsg += finalPlugboardResult;
 	});
 
 	return {

@@ -5,7 +5,7 @@ const Settings = ({ baseSettings, setBaseSettings, currentRotorPositions }) => {
 	return (
 		<div
 			id="settings-container"
-			className="flex flex-col items-center justify-center gap-y-8"
+			className="flex flex-col items-center justify-center gap-y-2"
 		>
 			<div className="flex flex-col items-center gap-y-4 p-2">
 				<h2>Ring settings</h2>
